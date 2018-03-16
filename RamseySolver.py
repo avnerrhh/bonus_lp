@@ -54,25 +54,21 @@ class RamseySolver:
 
     def combination_generator(self, seed_combination, index):
         amount_of_edges = len(self.edges)
-        current_combination = seed_combination
-        subset = [self.edges[bit] for bit in range(amount_of_edges) if self.is_bit_set(current_combination, bit)]
+        subset = [self.edges[bit] for bit in range(amount_of_edges) if self.is_bit_set(seed_combination, bit)]
         yield subset, seed_combination
 
-        next_combination_1 = current_combination + 2 ** index
-        if next_combination_1 < 2 ** len(self.edges):
-            for combi_1 in self.combination_generator(seed_combination=next_combination_1,
-                                                    index=index + 1):
-                yield combi_1
-                if not self.checked_combinations[next_combination_1]:
-                    break
+        if not self.checked_combinations[seed_combination]:
+            next_combination_1 = seed_combination + 2 ** index
+            if next_combination_1 < 2 ** len(self.edges):
+                for combi_1,combi_1_index in self.combination_generator(seed_combination=next_combination_1,
+                                                        index=index + 1):
+                    yield combi_1,combi_1_index
+            next_combination_2 = seed_combination + 2 ** (index + 1)
+            if next_combination_2 < 2 ** len(self.edges):
+                for combi_2,combi_2_index in self.combination_generator(seed_combination=next_combination_2,
+                                                        index=index + 1):
+                    yield combi_2,combi_2_index
 
-        next_combination_2 = current_combination + 2 ** (index + 1)
-        if next_combination_2 < 2 ** len(self.edges):
-            for combi_2 in self.combination_generator(seed_combination=next_combination_2,
-                                                    index=index + 1):
-                yield combi_2
-                if not self.checked_combinations[next_combination_2]:
-                    break
 
     """
         Adds a graph to the solution array.
