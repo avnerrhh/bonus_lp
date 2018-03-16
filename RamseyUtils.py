@@ -230,6 +230,5 @@ def graph_comp(file_name_solution,file_name_to_check):
             print(matrix_to_check)
             return False
     return True
-check_all_6_graphs()
 
 
