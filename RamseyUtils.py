@@ -139,7 +139,7 @@ def get_subset_by_number(all_edges, index):
 
 def check_all_6_graphs():
     vertex = []
-    for i in range(0, 5):
+    for i in range(0, 6):
         vertex.append(i+1)
     solution = []
     get_subset(vertex, 2, 0, [], solution)
@@ -147,8 +147,9 @@ def check_all_6_graphs():
         output.write("\n\n\n\n")
         for i in range(0, pow(2, len(solution))):
             edges_graph = get_subset_by_number(solution, i)
-            graph = edge_set_to_graph(edges_graph,5)
-            if not check_graph(graph,3,3):
+            graph = edge_set_to_graph(edges_graph, 6)
+            if not check_graph(graph, 3, 5):
+                print graph
                 output.write("matrix([\n")
                 output.write("     [")
                 first_flag = False
@@ -208,17 +209,22 @@ def equle_matrix(matrix, matrix_to_check):
 
 
 def graph_comp(file_name_solution,file_name_to_check):
-    matrix_to_check = get_matrix(file_name_to_check)
+    matrices_to_check = get_matrix(file_name_to_check)
     matrix_solution = get_matrix(file_name_solution)
-    for matrix in matrix_to_check:
+    i=0
+    for matrix in matrices_to_check:
         find_matrix_flag = False
+        i+=1
         for matrix_to_check in matrix_solution:
-            if equle_matrix(matrix,matrix_to_check):
+            if equle_matrix(matrix, matrix_to_check):
                 find_matrix_flag = True
+                print i
                 break
         if not find_matrix_flag:
+            print matrix
+            print(matrix_to_check)
             return False
     return True
-
-#print get_matrix("output_3_3_5.txt")
-print graph_comp("OUTPUT.txt","output_3_3_5.txt")
+check_all_6_graphs()
+#print check_graph({1: [4], 2: [3], 3: [2], 4: [1], 5: [], 6: []},3,5)
+#print graph_comp("output_3_5_6.txt","OUTPUT.txt")
