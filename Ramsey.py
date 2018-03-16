@@ -29,7 +29,7 @@ def get_subset(super_set, k, idx, current):
 
 def check_graph(graph, color1, color2):
     for key in graph:
-        if (len(graph[key]) >= color1 - 1) | (len(graph.keys()) - len(graph[key]) >= color2 - 1):
+        if len(graph[key]) >= color1 - 1:
             global solution
             solution = []
             get_subset(graph[key], color1 - 1, 0, [])
@@ -41,22 +41,25 @@ def check_graph(graph, color1, color2):
                     for neighbor in graph[vertex]:
                         if neighbor in set_to_check:
                             good_neighbors_count += 1
-                    if good_neighbors_count != color1 - 1:
+
+                    if good_neighbors_count < color1 - 1:
                         good_set_flag = False
                         break
                 if good_set_flag:
                     return True
+    for key in graph:
+        if (len(graph.keys()) - len(graph[key])) >= color2 - 1:
             solution = []
-            get_subset(list(set(graph.keys()) - set(graph[key])), color2 - 1, 0, [])
+            get_subset(list(set(graph.keys()) - set(graph[key]) - set([key])), color2 - 1, 0, [])
             for i in range(0, len(solution)):
                 set_to_check = solution.pop()
                 good_set_flag = True
                 for vertex in set_to_check:
                     good_neighbors_count = 1
-                    for neighbor in list(set(graph.keys()) - set(graph[vertex])):
+                    for neighbor in list(set(graph.keys()) - set(graph[vertex]) - set([vertex])):
                         if neighbor in set_to_check:
                             good_neighbors_count += 1
-                    if good_neighbors_count != color2 - 1:
+                    if good_neighbors_count < color2 - 1:
                         good_set_flag = False
                         break
                 if good_set_flag:
@@ -73,16 +76,15 @@ def write_to_graph_to_file(graph):
                 output.write(",\n")
                 output.write("     [")
             if 1 in graph[key]:
-                print "hello"
-                output.write("0")
-            else:
                 output.write("1")
+            else:
+                output.write("0")
             for i in range(2, len(graph.keys())+1):
                 output.write(",")
                 if i in graph[key]:
-                    output.write("0")
-                else:
                     output.write("1")
+                else:
+                    output.write("0")
             output.write("]")
             first_flag = True
         output.write("\n")
@@ -96,6 +98,7 @@ def edge_set_to_graph(edge_set, graphSize):
 
     for edge in edge_set:
         ans[edge[0]].append(edge[1])
+        ans[edge[1]].append(edge[0])
     return ans
 
 #get a subset from all the edges by the index in a binary manner
@@ -118,7 +121,15 @@ if __name__ == "__main__":
         vertex.append(i)
     global solution
     solution = []
+
+    # gets all the edges and put them in solution (solution is global because this code origin is from java)
     get_subset(vertex, 2, 0, [])
+    all_edges = subsets(solution)
+    graph = edge_set_to_graph([[1, 2], [1, 5], [2, 3], [3, 4], [4, 5]], graphSize)
+    print graph,color1,color2
+    if check_graph(graph, color1, color2):
+        print "hello"
+    write_to_graph_to_file(graph)
     # print all_edges
     # answer_flag = True
     # for edge_set in all_edges:
