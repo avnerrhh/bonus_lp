@@ -116,9 +116,7 @@ if __name__ == "__main__":
     color1 = int(sys.argv[1])
     color2 = int(sys.argv[2])
     graphSize = int(sys.argv[3])
-    vertex = []
-    for i in range(1, graphSize + 1):
-        vertex.append(i)
+    vertex = range(1, graphSize + 1)
     global solution
     solution = []
 
