@@ -7,16 +7,12 @@ if __name__ == "__main__":
     color2 = int(sys.argv[2])
     graphSize = int(sys.argv[3])
     solver = RamseySolver(color_1=color1, color_2=color2, graph_size=graphSize)
-    vertex = range(1, graphSize + 1)
-    solver.get_subset(super_set=vertex, k=2, idx=0, current=[])
-
-    # gets all the edges and put them in solution (solution is global because this code origin is from java)
-    all_edges = solver.subsets()
-    graph = edge_set_to_graph([[1, 2], [1, 5], [2, 3], [3, 4], [4, 5]], graphSize)
-    print graph, color1, color2
-    if check_graph(graph, color1, color2):
-        print "hello"
-    write_to_graph_to_file(graph)
+    for combination in solver.combination_genrator():
+        graph = edge_set_to_graph(combination, graphSize)
+        if check_graph(graph, color1, color2):
+            solver.add_solution(graph)
+    print(len(solver.solution))
+    # write_to_graph_to_file(graph)
     # print all_edges
     # answer_flag = True
     # for edge_set in all_edges:
