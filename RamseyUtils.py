@@ -1,4 +1,5 @@
 import copy
+import sys
 
 import itertools
 
@@ -10,8 +11,11 @@ import itertools
             Returns:
             A list of all subsets of size k.
     """
-def findsubsets(super_set,k):
+
+
+def findsubsets(super_set, k):
     return list(set(itertools.combinations(super_set, k)))
+
 
 def get_subset(super_set, k, idx, current, solution):
     if len(current) == k:
@@ -24,6 +28,7 @@ def get_subset(super_set, k, idx, current, solution):
     get_subset(super_set, k, idx + 1, current, solution)
     current.remove(super_set[idx])
     get_subset(super_set, k, idx + 1, current, solution)
+
 
 def check_graph(graph, color1, color2):
     for node, neighboors in graph.iteritems():
@@ -46,7 +51,7 @@ def check_graph(graph, color1, color2):
     for node, neighboors in graph.iteritems():
         if (len(graph.keys()) - len(neighboors)) >= color2 - 1:
             solution = []
-            get_subset(list(set(graph.keys()) - set(neighboors) - set([node])), color2 - 1, 0, [],solution)
+            get_subset(list(set(graph.keys()) - set(neighboors) - set([node])), color2 - 1, 0, [], solution)
             for i in range(0, len(solution)):
                 set_to_check = solution.pop()
                 good_set_flag = True
@@ -61,7 +66,6 @@ def check_graph(graph, color1, color2):
                 if good_set_flag:
                     return True
     return False
-
 
 
 def write_to_graph_to_file(graph):
@@ -136,6 +140,7 @@ def get_subset_by_number(all_edges, index):
         if (1 & index >> i):
             ans.append(all_edges[i])
     return ans
+
 
 def check_all_6_graphs():
     vertex = []
@@ -226,5 +231,5 @@ def graph_comp(file_name_solution,file_name_to_check):
             return False
     return True
 check_all_6_graphs()
-#print check_graph({1: [4], 2: [3], 3: [2], 4: [1], 5: [], 6: []},3,5)
-#print graph_comp("output_3_5_6.txt","OUTPUT.txt")
+
+
