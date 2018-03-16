@@ -9,7 +9,7 @@ if __name__ == "__main__":
     solver = RamseySolver(color_1=color1, color_2=color2, graph_size=graphSize)
     for combination in solver.combination_genrator():
         graph = edge_set_to_graph(combination, graphSize)
-        if check_graph(graph, color1, color2):
+        if not check_graph(graph, color1, color2):
             solver.add_solution(graph)
     print(len(solver.solution))
     # write_to_graph_to_file(graph)
