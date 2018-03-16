@@ -1,5 +1,4 @@
 import copy
-import numpy as np
 import sys
 
 import itertools
@@ -12,8 +11,11 @@ import itertools
             Returns:
             A list of all subsets of size k.
     """
-def findsubsets(super_set,k):
+
+
+def findsubsets(super_set, k):
     return list(set(itertools.combinations(super_set, k)))
+
 
 def get_subset(super_set, k, idx, current, solution):
     if len(current) == k:
@@ -26,6 +28,7 @@ def get_subset(super_set, k, idx, current, solution):
     get_subset(super_set, k, idx + 1, current, solution)
     current.remove(super_set[idx])
     get_subset(super_set, k, idx + 1, current, solution)
+
 
 def check_graph(graph, color1, color2):
     for node, neighboors in graph.iteritems():
@@ -48,7 +51,7 @@ def check_graph(graph, color1, color2):
     for node, neighboors in graph.iteritems():
         if (len(graph.keys()) - len(neighboors)) >= color2 - 1:
             solution = []
-            get_subset(list(set(graph.keys()) - set(neighboors) - set([node])), color2 - 1, 0, [],solution)
+            get_subset(list(set(graph.keys()) - set(neighboors) - set([node])), color2 - 1, 0, [], solution)
             for i in range(0, len(solution)):
                 set_to_check = solution.pop()
                 good_set_flag = True
@@ -63,7 +66,6 @@ def check_graph(graph, color1, color2):
                 if good_set_flag:
                     return True
     return False
-
 
 
 def write_to_graph_to_file(graph):
@@ -111,12 +113,3 @@ def get_subset_by_number(all_edges, index):
             ans.append(all_edges[i])
     return ans
 
-def printProgressBar(count, total, status=''):
-    bar_len = 60
-    filled_len = int(round(bar_len * count / float(total)))
-
-    percents = round(100.0 * count / float(total), 1)
-    bar = '=' * filled_len + '-' * (bar_len - filled_len)
-
-    sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
-    sys.stdout.flush()

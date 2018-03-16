@@ -10,7 +10,7 @@ class RamseySolver:
         self.graph_size = graph_size
         self.vertices = range(1, graph_size + 1)
         self.edges = self.get_all_edges()
-        self.check_combinations = {}
+        self.checked_combinations = {}
         self.solution = []
 
     """
@@ -45,53 +45,34 @@ class RamseySolver:
 
     """
     Generates all possibles coloring of graphs
+    This generator allows to iterate over a tree of all possible combinations and prune the "bad branches".
+    If a branches is flagged as a bad branch (using the checked_combinations dictionary) the branch will be
+    cut and the subtree will be iterated.
             Yields:
             A possible graph coloring
         """
 
-    def combination_genrator(self, seed_combination, range_to_go_over, index):
+    def combination_generator(self, seed_combination, index):
         amount_of_edges = len(self.edges)
         current_combination = seed_combination
-        # TODO: Update run ammount by 2**number_of_zeros - 2 (size of tree under node)
         subset = [self.edges[bit] for bit in range(amount_of_edges) if self.is_bit_set(current_combination, bit)]
-        yield subset
+        yield subset, seed_combination
 
         next_combination_1 = current_combination + 2 ** index
-        if index == len(self.edges):
-            return
-        for combi1 in self.combination_genrator(seed_combination=next_combination_1,
-                                                range_to_go_over=self.size_of_subtree(next_combination_1),
-                                                index=index + 1):
-            yield combi1
+        if next_combination_1 < 2 ** len(self.edges):
+            for combi_1 in self.combination_generator(seed_combination=next_combination_1,
+                                                    index=index + 1):
+                yield combi_1
+                if not self.checked_combinations[next_combination_1]:
+                    break
+
         next_combination_2 = current_combination + 2 ** (index + 1)
-        for combi2 in self.combination_genrator(seed_combination=next_combination_2,
-                                                range_to_go_over=self.size_of_subtree(next_combination_2),
-                                                index=index + 1):
-            yield combi2
-
-        # amount_of_edges = len(self.edges)
-        # current_combination = seed_combination
-        # # TODO: Update run ammount by 2**number_of_zeros - 2 (size of tree under node)
-        # while range_to_go_over != 0:
-        #     subset = [self.edges[bit] for bit in range(amount_of_edges) if self.is_bit_set(current_combination, bit)]
-        #     yield subset
-        #     result = yield
-        #     if not result:
-        #         range_to_go_over -= self.size_of_subtree(current_combination)
-        #         return
-        #     else:
-        #         next_combination_1 = current_combination + 2 ** index
-        #         self.combination_genrator(seed_combination=next_combination_1,
-        #                                   range_to_go_over=self.size_of_subtree(next_combination_1),
-        #                                   index=index + 1)
-        #         next_combination_2 = current_combination + 2 ** (index + 1)
-        #         self.combination_genrator(seed_combination=next_combination_1,
-        #                                   range_to_go_over=self.size_of_subtree(next_combination_1),
-        #                                   index=index + 2)
-
-        # for i in range(1 << len(self.edges)):
-        #     subset = [self.edges[bit] for bit in range(amount_of_edges) if self.is_bit_set(i, bit)]
-        #     yield subset
+        if next_combination_2 < 2 ** len(self.edges):
+            for combi_2 in self.combination_generator(seed_combination=next_combination_2,
+                                                    index=index + 1):
+                yield combi_2
+                if not self.checked_combinations[next_combination_2]:
+                    break
 
     """
         Adds a graph to the solution array.
