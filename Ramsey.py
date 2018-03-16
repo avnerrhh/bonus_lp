@@ -7,11 +7,18 @@ if __name__ == "__main__":
     color2 = int(sys.argv[2])
     graphSize = int(sys.argv[3])
     solver = RamseySolver(color_1=color1, color_2=color2, graph_size=graphSize)
-    for combination in solver.combination_genrator():
+    combination_generator = solver.combination_genrator(seed_combination=0, range_to_go_over=2**len(solver.edges), index=0)
+    count = 0
+    for combination in combination_generator:
+        count += 1
         graph = edge_set_to_graph(combination, graphSize)
         if not check_graph(graph, color1, color2):
             solver.add_solution(graph)
+            # combination_generator.send(False)
+        # else:
+        #     combination_generator.send(True)
     print(len(solver.solution))
+    print(count)
     # write_to_graph_to_file(graph)
     # print all_edges
     # answer_flag = True

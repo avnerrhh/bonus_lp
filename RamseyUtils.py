@@ -1,4 +1,6 @@
 import copy
+import numpy as np
+import sys
 
 import itertools
 
@@ -108,3 +110,13 @@ def get_subset_by_number(all_edges, index):
         if (1 & index >> i):
             ans.append(all_edges[i])
     return ans
+
+def printProgressBar(count, total, status=''):
+    bar_len = 60
+    filled_len = int(round(bar_len * count / float(total)))
+
+    percents = round(100.0 * count / float(total), 1)
+    bar = '=' * filled_len + '-' * (bar_len - filled_len)
+
+    sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', status))
+    sys.stdout.flush()
