@@ -68,6 +68,45 @@ def check_graph(graph, color1, color2):
     return False
 
 
+def check_graph_by_color(graph, color, flag):
+    if flag:
+        for node, neighboors in graph.iteritems():
+            if len(neighboors) >= color - 1:
+                solution = []
+                get_subset(neighboors, color - 1, 0, [], solution)
+                for i in range(0, len(solution)):
+                    set_to_check = solution.pop()
+                    good_set_flag = True
+                    for vertex in set_to_check:
+                        good_neighbors_count = 1
+                        for neighbor in graph[vertex]:
+                            if neighbor in set_to_check:
+                                good_neighbors_count += 1
+                        if good_neighbors_count < color - 1:
+                            good_set_flag = False
+                            break
+                    if good_set_flag:
+                        return True
+    else:
+        for node, neighboors in graph.iteritems():
+            if (len(graph.keys()) - len(neighboors)) >= color - 1:
+                solution = []
+                get_subset(list(set(graph.keys()) - set(neighboors) - set([node])), color - 1, 0, [], solution)
+                for i in range(0, len(solution)):
+                    set_to_check = solution.pop()
+                    good_set_flag = True
+                    for vertex in set_to_check:
+                        good_neighbors_count = 1
+                        for neighbor in list(set(graph.keys()) - set(graph[vertex]) - set([vertex])):
+                            if neighbor in set_to_check:
+                                good_neighbors_count += 1
+                        if good_neighbors_count < color - 1:
+                            good_set_flag = False
+                            break
+                    if good_set_flag:
+                        return True
+    return False
+
 def write_to_graph_to_file(graph):
     with open('OUTPUT.txt', 'w') as output:
         output.write("matrix([\n")
