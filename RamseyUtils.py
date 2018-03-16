@@ -1,5 +1,17 @@
 import copy
 
+import itertools
+
+"""
+    Returns a list of all subsets of size k.
+            Parameters:
+            super_set - a list of objects
+            k - the size of the output sub sets
+            Returns:
+            A list of all subsets of size k.
+    """
+def findsubsets(super_set,k):
+    return list(set(itertools.combinations(super_set, k)))
 
 def get_subset(super_set, k, idx, current, solution):
     if len(current) == k:
